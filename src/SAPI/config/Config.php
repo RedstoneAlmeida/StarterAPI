@@ -59,10 +59,13 @@ class Config
         }
     }
 
-    public function get(String $configName){
+    public function getConfig(String $configName, bool $callSave = false){
         $configuration = new Configuration(\pocketmine\PLUGIN_PATH . "BaseAPI" . DIRECTORY_SEPARATOR, "configs.yml", Configuration::YAML);
         if(!$configuration->exists($configName)){ Server::getInstance()->getLogger()->critical("Config not exists!"); return false; }
         $all = $configuration->get($configName);
+        if($callSave != false) {
+            $a = new Configuration($all["path"], $configName . self::typed($all["type"]), self::types($all["type"])); $a->save();
+        }
         return new Configuration($all["path"], $configName . self::typed($all["type"]), self::types($all["type"]));
     }
 
